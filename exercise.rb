@@ -18,6 +18,14 @@ class System
     @bodies
   end
 
+  def bodies_type(type)
+    type_list = []
+    @bodies.each { |body|
+    if body.class == type
+    type_list << body
+    end}
+    return type_list
+  end
 end
 
 
@@ -41,12 +49,16 @@ class Planet < Body
     super(name, mass, solar_system)
     @day = "#{day_in_hours} earth hours"
     @year = "#{year_in_days} earth days"
+    @day_in_hours = day_in_hours
   end
 
   def name
     super
   end
 
+  def day_in_hours
+    @day_in_hours
+  end
 end
 
 
@@ -66,9 +78,9 @@ end
 
 class Moon < Body
 
-  def initialize(name, mass, month_in_days, planet, solar_system)
+  def initialize(name, mass, month_in_earth_days, planet, solar_system)
     super(name, mass, solar_system)
-    @month = "#{month_in_days} #{planet.name} days"
+    @month = "#{month_in_earth_days*24/planet.day_in_hours} #{planet.name} days"
     @planet = planet.name
   end
 
@@ -97,5 +109,10 @@ pluto = Planet.new("Pluto", 1.309*10**22, 153, 90500, oss)
 
 # Moons
 moon = Moon.new("Luna", 7.348*10**22, 27, earth, oss)
-puts  oss.bodies.inspect
-# puts earth.name
+europa = Moon.new("Europa", 4.799*10**22, 3.55, jupiter, oss)
+ganymede = Moon.new("Ganymede", 1.48*10**23, 7.154, jupiter, oss)
+triton = Moon.new("Triton", 2.14*10**22, -5.877, neptune, oss)
+io = Moon.new("Io", 8.94*10**22, 1.769, jupiter, oss)
+umbriel = Moon.new("Umbriel", 1.27*10**21, 4.144, uranus, oss)
+enceladus = Moon.new("Enceladus", 8.40*10**19, 1.37, saturn, oss)
+titan = Moon.new("Titan", 1.35*10**23, 15.95, saturn, oss)
