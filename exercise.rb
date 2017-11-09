@@ -1,7 +1,10 @@
 class System
+@@all_systems = []
 
-  def initialize
+  def initialize(name)
+    @name = name
     @bodies = []
+    @@all_systems << self
   end
 
   def add(celestial_body)
@@ -10,8 +13,15 @@ class System
 
   def total_mass
     sum = 0
-    @bodies.each {|body| sum += body}
+    @bodies.each {|body| sum += body.mass}
     return sum
+  end
+
+  def self.total_mass
+    total_mass = 0
+    @@all_systems.each { |solar_system|
+    total_mass += solar_system.total_mass}
+    return total_mass
   end
 
   def bodies
@@ -26,21 +36,41 @@ class System
     end}
     return type_list
   end
+
+  def name
+    @name
+  end
 end
 
 
 class Body < System
 
   def initialize(name, mass, solar_system)
-    @name = name
-    @mass = "#{mass} kgs"
-    solar_system.add(self)
+    solar_system.bodies.each { |body|
+    if body.name == name
+      puts "This Celestial body already exists."
+    end }
+      @name = name
+      @mass = "#{mass} kgs"
+      solar_system.add(self)
   end
 
   def name
     @name
   end
 
+  def mass
+    @mass.to_f
+  end
+
+  def self.all(syste)
+    type_list = []
+    syste.bodies.each { |body|
+    if body.class == self
+    type_list << body
+    end}
+    return type_list
+  end
 end
 
 class Planet < Body
@@ -91,7 +121,7 @@ class Moon < Body
 end
 
 # system
-oss = System.new
+oss = System.new("Local Solar System")
 
 #Stars
 sun = Star.new("Sol", 1.989*10**30, "G-Type", oss)
@@ -116,3 +146,17 @@ io = Moon.new("Io", 8.94*10**22, 1.769, jupiter, oss)
 umbriel = Moon.new("Umbriel", 1.27*10**21, 4.144, uranus, oss)
 enceladus = Moon.new("Enceladus", 8.40*10**19, 1.37, saturn, oss)
 titan = Moon.new("Titan", 1.35*10**23, 15.95, saturn, oss)
+mercury = Planet.new("Mercury", 3.301*10**23, 1407, 88, oss)
+
+# puts Planet.all(oss)
+# puts Moon.all(oss)
+
+
+a_centauri = System.new("Alpha Centauri")
+
+a_centauri_a = Star.new("Alpha Centauri A", 2*10**30, "Main Sequence", a_centauri)
+
+# puts a_centauri.total_mass
+# puts oss.total_mass
+# puts System.total_mass
+# puts oss.total_mass
